@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.models import User
 from django.utils import timezone
-from .forms import RegisterForm
+from .forms import RegisterForm, PostForm
 from .models import BlogPost
 
 
@@ -14,6 +14,21 @@ from .models import BlogPost
 def home(request):
     posts = BlogPost.objects.all()
     return render(request, 'blog/blog_page.html', {'posts' : posts})
+
+@login_required
+def post_page(request):
+    if request.method == 'POST':
+        initial_form = PostForm(request.POST)
+        if initial_form.is_valid():
+            post_name = initial_form.cleaned_data.get('post_name')
+            post_text = initial_form.cleaned_data.get('post_content')
+            BlogPost.objects.create(post_name = post_name, post_content = post_text, post_date = timezone.now())
+            success_msg = 'Successfully added a blog post!'
+    else:
+        initial_form = PostForm()
+        success_msg = None
+    
+    return render(request, 'blog/add_post.html', {'form' : initial_form, 'message' : success_msg})
 
 def register(request):
     if request.method == 'POST':

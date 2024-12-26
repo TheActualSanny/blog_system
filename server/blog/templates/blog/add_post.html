@@ -9,11 +9,16 @@
     <title>Create Post</title>
 </head>
 <body>
-    <div class="post_creation">
-        <form action = "post" href = "{% url 'blog:add_post' %}">
+    <div class="post-creation">
+        <form method = "post" action = "{% url 'blog:post_page' %}">
+            {% csrf_token %}
             {{ form.as_p }}
-            <button type = "input"> Add Post </button>
+            <button type = "submit"> Add Post </button>
         </form>
+        <a href = "{% url 'blog:blog_page' %}"> Blog Page</a>
+        {% if message %}
+        <h1 class="sucess-message"> {{ message }} </h1>
+        {% endif %}
     </div>
 </body>
 </html>

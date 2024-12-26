@@ -22,7 +22,7 @@ class PostForm(forms.ModelForm):
     pass
     class Meta:
         model = BlogPost
-        fields = ['id', 'post_name', 'post_content', 'post_date']
+        exclude = ['id', 'post_date',]
 
     def clean(self):
         initially_cleaned = super().clean()
