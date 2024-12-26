@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" type = "text/css" href = "{% static 'styles/styles.css' %}">
+    <title>Blog</title>
+
+
+</head>
+<body>
+    <div class = "container">
+        {% if posts %}
+        {% for post in posts %}
+        <div class = "post-instance">
+            <h1 class = "post-header">{{ post.id }}. {{ post.post_name }}</h1>
+            <p class = "post-content"> { post.post_content {}} </p>
+            <p class = "post-date"> {{post.post_date}} </p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h1> No posts added. <br>Go to the post creation page to make a post! </h1>
+        {% endif %}
+    </div>
+
+    <form method = "post" action = "{% url 'blog:logoutt' %}">
+        {% csrf_token %}
+        <button type = "submit"> Logout </button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" type = "text/css" href = "{% static 'styles/styles.css' %}">
+    <title>Create Post</title>
+</head>
+<body>
+    <div class="post_creation">
+        <form action = "post" href = "{% url 'blog:add_post' %}">
+            {{ form.as_p }}
+            <button type = "input"> Add Post </button>
+        </form>
+    </div>
+</body>
+</html>
