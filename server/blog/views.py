@@ -30,6 +30,11 @@ def post_page(request):
     
     return render(request, 'blog/add_post.html', {'form' : initial_form, 'message' : success_msg})
 
+def delete_post(request):
+    if request.method == 'POST':
+        BlogPost.objects.filter(id = request.POST.get('post_num')).delete()
+        return redirect('blog:blog_page')
+
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -57,6 +62,7 @@ def logoutt(request):
 def loginn(request):
     error_msg = None
     if request.method == 'POST':
+        print(request.POST)
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username = username, password = password)
