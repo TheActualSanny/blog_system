@@ -14,11 +14,16 @@
     <div class = "container">
         {% if posts %}
         {% for post in posts %}
+        <form action = "{% url 'blog:delete_post' %}" method = "post">
         <div class = "post-instance">
-            <h1 class = "post-header">{{ post.id }}. {{ post.post_name }}</h1>
-            <p class = "post-content"> {{ post.post_content }} </p>
-            <p class = "post-date"> {{post.post_date}} </p>
-        </div>
+                {% csrf_token %}
+                <h1 class = "post-header">{{ post.id }}. {{ post.post_name }}</h1>
+                <p class = "post-content" name = 'content'> {{ post.post_content }} </p>
+                <p class = "post-date"> {{post.post_date}} </p>
+                <input type = "text" value = "{{ post.id }}" name = "post_num" hidden>
+                <button type="submit"> Delete Post </button>
+            </div>
+        </form>
         {% endfor %}
         {% else %}
         <h1> No posts added. <br>Go to the post creation page to make a post! </h1>
