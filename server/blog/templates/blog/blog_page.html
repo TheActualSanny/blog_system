@@ -11,6 +11,10 @@
 
 </head>
 <body>
+    <form action="{% url 'blog:blog_page' %}" method = "post">
+        {% csrf_token %}
+        <input type = "text" placeholder = "Search for a post..." name = "search-input">
+    </form>
     <div class = "container">
         {% if posts %}
         {% for post in posts %}

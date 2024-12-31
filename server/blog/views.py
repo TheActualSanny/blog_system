@@ -12,7 +12,10 @@ from .models import BlogPost
 
 @login_required
 def home(request):
-    posts = BlogPost.objects.all()
+    if request.method == 'POST':
+        posts = BlogPost.objects.filter(post_name__contains = request.POST.get('search-input'))
+    else:
+        posts = BlogPost.objects.all()
     return render(request, 'blog/blog_page.html', {'posts' : posts})
 
 @login_required
