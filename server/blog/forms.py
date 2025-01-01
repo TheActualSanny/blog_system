@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import BlogPost
+from .models import BlogPost, UserProfile
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget = forms.PasswordInput)
@@ -17,12 +17,18 @@ class RegisterForm(forms.ModelForm):
         if password and confirm and password != confirm:
             raise forms.ValidationError('Passwords must match!')
         return cleaned_data
-    
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        exclude = ('user',)
+
 class PostForm(forms.ModelForm):
     pass
     class Meta:
         model = BlogPost
-        exclude = ['id', 'post_date',]
+        exclude = ('id', 'post_date',)
 
     def clean(self):
         initially_cleaned = super().clean()
