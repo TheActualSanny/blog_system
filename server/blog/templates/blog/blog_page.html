@@ -39,6 +39,11 @@
         <button type = "submit"> Logout </button>
     </form>
 
+    <form method = "get" action = "{% url 'blog:user_settings' %}">
+        {% csrf_token %}
+        <button type = "submit"> Profile </button>
+    </form>
+
     <form method = "get" action = "{% url 'blog:post_page' %}">
         {% csrf_token %}
         <button type = "submit"> Post Page </button>
