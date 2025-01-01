@@ -6,9 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.models import User
 from django.utils import timezone
-from .forms import RegisterForm, PostForm
-from .models import BlogPost
-
+from django.db import IntegrityError
+from .forms import RegisterForm, PostForm, ProfileForm
+from .models import BlogPost, UserProfile
 
 @login_required
 def home(request):
@@ -32,6 +32,28 @@ def post_page(request):
         success_msg = None
     
     return render(request, 'blog/add_post.html', {'form' : initial_form, 'message' : success_msg})
+
+@login_required
+def profile_settings(request):
+    if request.method == 'POST':
+        changed_profile = ProfileForm(request.POST, request.FILES)
+        if changed_profile.is_valid():
+            new_email = changed_profile.cleaned_data.get('email_address')
+            new_phone = changed_profile.cleaned_data.get('phone_number')
+            new_image = changed_profile.cleaned_data.get('image')
+            try:
+                UserProfile.objects.create(email_address = new_email, phone_number = new_phone,
+                                           image = new_image, user = request.user)
+            except IntegrityError:
+                UserProfile.objects.filter(user__id = request.user.id).update(email_address = new_email, phone_number = new_phone,
+                                           image = new_image)
+            success_msg = "Successfully changed profile settings!"
+    else:
+        changed_profile = ProfileForm()
+        success_msg = None
+    
+    return render(request, 'blog/user_settings.html', {'profile' : changed_profile, 'message' : success_msg})
+            
 
 def delete_post(request):
     if request.method == 'POST':
