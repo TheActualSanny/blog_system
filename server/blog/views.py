@@ -12,11 +12,15 @@ from .models import BlogPost, UserProfile
 
 @login_required
 def home(request):
+    try:
+        profile_image = UserProfile.objects.get(user__id = request.user.id)
+    except UserProfile.DoesNotExist:
+        profile_image = None
     if request.method == 'POST':
         posts = BlogPost.objects.filter(post_name__contains = request.POST.get('search-input'))
     else:
         posts = BlogPost.objects.all()
-    return render(request, 'blog/blog_page.html', {'posts' : posts})
+    return render(request, 'blog/blog_page.html', {'posts' : posts, 'profile' : profile_image})
 
 @login_required
 def post_page(request):
