@@ -11,6 +11,9 @@
 
 </head>
 <body>
+    {% if profile %}
+        <img src = "{{ profile.image.url }}" width = 50px>
+    {% endif %}
     <form action="{% url 'blog:blog_page' %}" method = "post">
         {% csrf_token %}
         <input type = "text" placeholder = "Search for a post..." name = "search-input">
@@ -37,6 +40,11 @@
     <form method = "post" action = "{% url 'blog:logoutt' %}">
         {% csrf_token %}
         <button type = "submit"> Logout </button>
+    </form>
+
+    <form method = "get" action = "{% url 'blog:user_settings' %}">
+        {% csrf_token %}
+        <button type = "submit"> Profile </button>
     </form>
 
     <form method = "get" action = "{% url 'blog:post_page' %}">
