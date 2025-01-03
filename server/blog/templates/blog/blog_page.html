@@ -7,8 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "stylesheet" type = "text/css" href = "{% static 'styles/styles.css' %}">
     <title>Blog</title>
-
-
 </head>
 <body>
     {% if profile %}
@@ -27,15 +25,34 @@
                 <h1 class = "post-header">{{ post.id }}. {{ post.post_name }}</h1>
                 <p class = "post-content" name = 'content'> {{ post.post_content }} </p>
                 <p class = "post-date"> {{post.post_date}} </p>
+        </form>
+                <form method = "post" action = "{% url 'blog:like_post' %}" id = 'like-form'>
+                    {% csrf_token %}
+                    <input type = "text" value = "{{ post.id }}" name = "post-id" hidden>
+                    <input type = "text" value = "{{ post.like_count }}" name = "likes" hidden>
+                    <button type = "submit" id = "like-post"> 👍Like {{ post.like_count }} </button>
+                </form>
+                <br>
+                <br>
+                <form method = "post" action = "{% url 'blog:dislike_post' %}" id = 'dislike-form'>
+                    {% csrf_token %}
+                    <input type = "text" value = "{{ post.id }}" name = "post-id" hidden>
+                    <input type = "text" value = "{{ post.dislike_count }}" name = "dislikes" hidden>
+                    <button type = "submit" id = "dislike-post"> 👎Dislike {{ post.dislike_count }} </button>
+                </form>
                 <input type = "text" value = "{{ post.id }}" name = "post_num" hidden>
                 <button type="submit"> Delete Post </button>
             </div>
-        </form>
+        
         {% endfor %}
         {% else %}
         <h1> No posts added. <br>Go to the post creation page to make a post! </h1>
         {% endif %}
     </div>
+
+    <br>
+    <br>
+    <br>
 
     <form method = "post" action = "{% url 'blog:logoutt' %}">
         {% csrf_token %}
