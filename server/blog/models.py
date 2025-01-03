@@ -6,6 +6,8 @@ class BlogPost(models.Model):
     post_name = models.CharField(max_length = 60)
     post_content = models.CharField(max_length = 500)
     post_date = models.DateField()
+    like_count = models.IntegerField(default = 0)
+    dislike_count = models.IntegerField(default = 0)
 
     def __str__(self):
         return f'{self.post_name} - {self.post_content} - {self.post_date}'
