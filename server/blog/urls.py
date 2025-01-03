@@ -10,5 +10,7 @@ urlpatterns = [
     path('blog/', views.home, name = 'blog_page'),
     path('blog_post/', views.post_page, name = 'post_page'),
     path('delete_post/', views.delete_post, name = 'delete_post'),
-    path('user_settings/', views.profile_settings, name = 'user_settings')
+    path('user_settings/', views.profile_settings, name = 'user_settings'),
+    path('like_post/', views.like_post, name = 'like_post'),
+    path('dislike_post/', views.dislike_post, name = 'dislike_post')
 ] 

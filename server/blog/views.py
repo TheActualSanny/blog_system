@@ -7,6 +7,7 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import IntegrityError
+from django.db.models import F
 from .forms import RegisterForm, PostForm, ProfileForm
 from .models import BlogPost, UserProfile
 
@@ -29,13 +30,26 @@ def post_page(request):
         if initial_form.is_valid():
             post_name = initial_form.cleaned_data.get('post_name')
             post_text = initial_form.cleaned_data.get('post_content')
-            BlogPost.objects.create(post_name = post_name, post_content = post_text, post_date = timezone.now())
+            BlogPost.objects.create(like_count = 0, dislike_count = 0, post_name = post_name, 
+                                    post_content = post_text, post_date = timezone.now())
             success_msg = 'Successfully added a blog post!'
     else:
         initial_form = PostForm()
         success_msg = None
     
     return render(request, 'blog/add_post.html', {'form' : initial_form, 'message' : success_msg})
+
+@login_required
+def like_post(request):
+    if request.method == 'POST':
+        BlogPost.objects.filter(pk = request.POST.get('post-id')).update(like_count = F('like_count') + 1)
+    return redirect('blog:blog_page')
+
+@login_required
+def dislike_post(request):
+    if request.method == 'POST':
+        BlogPost.objects.filter(pk = request.POST.get('post-id')).update(dislike_count = F('dislike_count') + 1)
+    return redirect('blog:blog_page')
 
 @login_required
 def profile_settings(request):
@@ -63,7 +77,7 @@ def delete_post(request):
     if request.method == 'POST':
         BlogPost.objects.filter(id = request.POST.get('post_num')).delete()
         return redirect('blog:blog_page')
-
+    
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -91,7 +105,6 @@ def logoutt(request):
 def loginn(request):
     error_msg = None
     if request.method == 'POST':
-        print(request.POST)
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username = username, password = password)
