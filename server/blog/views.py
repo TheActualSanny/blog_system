@@ -42,13 +42,33 @@ def post_page(request):
 @login_required
 def like_post(request):
     if request.method == 'POST':
-        BlogPost.objects.filter(pk = request.POST.get('post-id')).update(like_count = F('like_count') + 1)
+        current_post = request.POST.get('post-id')
+        post = BlogPost.objects.filter(pk = current_post)
+        liked = UserProfile.objects.get(user__id = request.user.id)
+        if current_post in liked.liked_posts['id']:
+            post.update(like_count = F('like_count') - 1)
+            liked.liked_posts['id'].remove(current_post)
+            liked.save()
+        else:
+            post.update(like_count = F('like_count') + 1)
+            liked.liked_posts['id'].append(current_post)
+            liked.save()
     return redirect('blog:blog_page')
 
 @login_required
 def dislike_post(request):
     if request.method == 'POST':
-        BlogPost.objects.filter(pk = request.POST.get('post-id')).update(dislike_count = F('dislike_count') + 1)
+        current_post = request.POST.get('post-id')
+        post = BlogPost.objects.filter(pk = current_post)
+        disliked = UserProfile.objects.get(user__id = request.user.id)
+        if current_post in disliked.disliked_posts['id']:
+            post.update(dislike_count = F('dislike_count') - 1)
+            disliked.disliked_posts['id'].remove(current_post)
+            disliked.save()
+        else:
+            post.update(dislike_count = F('dislike_count') + 1)
+            disliked.disliked_posts['id'].append(current_post)
+            disliked.save()
     return redirect('blog:blog_page')
 
 @login_required
@@ -72,7 +92,7 @@ def profile_settings(request):
     
     return render(request, 'blog/user_settings.html', {'profile' : changed_profile, 'message' : success_msg})
             
-
+@login_required
 def delete_post(request):
     if request.method == 'POST':
         BlogPost.objects.filter(id = request.POST.get('post_num')).delete()

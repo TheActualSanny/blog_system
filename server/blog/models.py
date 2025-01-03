@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+def id_values():
+    return {'id' : []}
+
 class BlogPost(models.Model):
     id = models.AutoField(primary_key = True)
     post_name = models.CharField(max_length = 60)
@@ -17,3 +20,5 @@ class UserProfile(models.Model):
     phone_number = models.IntegerField()
     image = models.ImageField(upload_to = 'media/')
     user = models.OneToOneField(User, on_delete = models.CASCADE)
+    liked_posts = models.JSONField(default = id_values) # The default argument has to be a callable
+    disliked_posts = models.JSONField(default = id_values)
