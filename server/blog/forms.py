@@ -22,7 +22,7 @@ class RegisterForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        exclude = ('user',)
+        exclude = ('user', 'liked_posts', 'disliked_posts',)
 
 class PostForm(forms.ModelForm):
     pass
