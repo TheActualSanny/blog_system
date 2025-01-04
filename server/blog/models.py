@@ -22,3 +22,9 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     liked_posts = models.JSONField(default = id_values) # The default argument has to be a callable
     disliked_posts = models.JSONField(default = id_values)
+
+class CommentInstances(models.Model):
+    associated_user = models.ForeignKey(UserProfile, on_delete = models.CASCADE)
+    associated_post = models.ForeignKey(BlogPost, on_delete = models.CASCADE)
+    comment_content = models.CharField(max_length = 500)
+    comment_date = models.DateField()
