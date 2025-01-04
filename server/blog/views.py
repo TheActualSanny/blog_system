@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -9,7 +10,7 @@ from django.utils import timezone
 from django.db import IntegrityError
 from django.db.models import F
 from .forms import RegisterForm, PostForm, ProfileForm
-from .models import BlogPost, UserProfile
+from .models import BlogPost, UserProfile, CommentInstances
 
 @login_required
 def home(request):
@@ -26,9 +27,21 @@ def home(request):
 @login_required
 def detailed_post(request, post_id):
     selected_post = BlogPost.objects.get(pk = post_id)
-    return render(request, 'blog/detailed_blog.html', {'post' : selected_post})
+    comment_section = CommentInstances.objects.filter(associated_post__id = selected_post.id)
+    return render(request, 'blog/detailed_blog.html', {'post' : selected_post, 'comments' : comment_section})
 
 @login_required
+def add_comment(request):
+    if request.method == 'POST':
+        current_profile = UserProfile.objects.get(user__id = request.user.id)
+        associated_post = BlogPost.objects.get(pk = request.POST.get('post-id'))
+        try:
+            CommentInstances.objects.create(associated_user = current_profile, associated_post = associated_post, 
+                            comment_content = request.POST.get('comment-content'), comment_date = timezone.now())
+        except Exception as error:
+            print(error)
+    return redirect('blog:detailed_post', post_id = int(request.POST.get('post-id')))
+
 def post_page(request):
     if request.method == 'POST':
         initial_form = PostForm(request.POST)
