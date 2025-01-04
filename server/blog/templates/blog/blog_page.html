@@ -22,7 +22,7 @@
         <form action = "{% url 'blog:delete_post' %}" method = "post">
         <div class = "post-instance">
                 {% csrf_token %}
-                <h1 class = "post-header">{{ post.id }}. {{ post.post_name }}</h1>
+                <h1 class = "post-header"><a href = "{% url 'blog:detailed_post' post.id %}"> {{ post.id }}. {{ post.post_name }} </a></h1>
                 <p class = "post-content" name = 'content'> {{ post.post_content }} </p>
                 <p class = "post-date"> {{post.post_date}} </p>
         </form>
