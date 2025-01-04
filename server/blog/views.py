@@ -24,6 +24,11 @@ def home(request):
     return render(request, 'blog/blog_page.html', {'posts' : posts, 'profile' : profile_image})
 
 @login_required
+def detailed_post(request, post_id):
+    selected_post = BlogPost.objects.get(pk = post_id)
+    return render(request, 'blog/detailed_blog.html', {'post' : selected_post})
+
+@login_required
 def post_page(request):
     if request.method == 'POST':
         initial_form = PostForm(request.POST)
