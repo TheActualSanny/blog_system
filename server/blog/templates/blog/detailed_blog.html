@@ -13,7 +13,26 @@
         <br>
         <br>
         <p class = "post-content"> {{ post.post_content }} </p>
+
+        <form action = "{% url 'blog:add_comment' %}" method = "post">
+            {% csrf_token %}
+            <input name = "comment-content" type = "text" placeholder = "Type a comment...">
+            <input name = "post-id" value = "{{ post.id }}" hidden>
+            <button type = "submit"> Add comment </button>
+        </form>
+
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="comment-instance">
+                <p style = "font-size: larger; color: #B528E0"; ><strong>{{ comment.associated_user.user.username }} </strong></p>
+                <p> {{ comment.comment_content }} </p>
+                <br>
+                <br>
+                <p> {{ comment.comment_date }} </p>
+            </div>
+            {% endfor %}
+        {% endif %}
     </div>
-    <!-- The comment feature will be implemented here  -->
+    
 </body>
 </html>
