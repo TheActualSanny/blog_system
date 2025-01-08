@@ -9,7 +9,7 @@
     <title>Blog</title>
 </head>
 <body>
-    {% if profile %}
+    {% if profile.image %}
         <img src = "{{ profile.image.url }}" width = 50px>
     {% endif %}
     <form action="{% url 'blog:blog_page' %}" method = "post">
