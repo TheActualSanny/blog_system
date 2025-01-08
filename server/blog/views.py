@@ -123,6 +123,7 @@ def register(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = User.objects.create_user(username = username, password = password)
+            UserProfile.objects.create(image = None, phone_number = None, email_address = None, user = user)
             # We need the user instance to pass it to the login method. If we only needed to 
             # Insert the form data into a database, we can just call .save() method on the ModelForm instance.
             # If we want to save the changes but not to commit them yet (To modify something later), we can call
