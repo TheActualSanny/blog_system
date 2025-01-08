@@ -16,9 +16,9 @@ class BlogPost(models.Model):
         return f'{self.post_name} - {self.post_content} - {self.post_date}'
     
 class UserProfile(models.Model):
-    email_address = models.CharField(max_length = 60)
-    phone_number = models.IntegerField()
-    image = models.ImageField(upload_to = 'media/')
+    email_address = models.CharField(max_length = 60, null = True)
+    phone_number = models.IntegerField(null = True)
+    image = models.ImageField(upload_to = 'media/', null = True)
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     liked_posts = models.JSONField(default = id_values) # The default argument has to be a callable
     disliked_posts = models.JSONField(default = id_values)
